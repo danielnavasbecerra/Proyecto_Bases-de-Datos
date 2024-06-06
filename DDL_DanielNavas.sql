@@ -15,129 +15,138 @@ CREATE TABLE cliente (
     direccion VARCHAR(100),
     telefono VARCHAR(15),
     email VARCHAR(50),
-    CONSTRAINT PK_Cliente_Id PRIMARY KEY(id)
+    CONSTRAINT PK_Cliente_Id PRIMARY KEY (id)
 );
 
-CREATE TABLE Vehiculo (
-    id INT PRIMARY KEY,
-    Placa VARCHAR(10),
-    Marca VARCHAR(50),
-    Modelo VARCHAR(50),
-    Año INT,
-    ClienteID INT,
-    FOREIGN KEY (ClienteID) REFERENCES Clientes(ClienteID)
+CREATE TABLE vehiculo (
+    id INT NOT NULL AUTO_INCREMENT,
+    placa VARCHAR(10),
+    marca VARCHAR(50),
+    modelo VARCHAR(50),
+    año INT,
+    id_cliente INT,
+    CONSTRAINT PK_Vehiculo_Id PRIMARY KEY (id),
+	CONSTRAINT FK_Cliente_Vehiculo_Id FOREIGN KEY (id_cliente) REFERENCES cliente(id)
 );
 
-CREATE TABLE Servicio (
-    id INT PRIMARY KEY,
-    Nombre VARCHAR(50),
-    Descripcion TEXT,
-    Costo DECIMAL(10, 2)
+CREATE TABLE servicio (
+    id INT NOT NULL AUTO_INCREMENT,
+    nombre VARCHAR(50),
+    descripcion TEXT,
+    costo DECIMAL(10, 2),
+    CONSTRAINT PK_Servicio_Id PRIMARY KEY (id)
 );
 
-
-CREATE TABLE Reparacion (
-    id INT PRIMARY KEY,
-    Fecha DATE,
-    VehiculoID INT,
-    EmpleadoID INT,
-    ServicioID INT,
-    CostoTotal DECIMAL(10, 2),
-    Descripcion TEXT,
-    FOREIGN KEY (VehiculoID) REFERENCES Vehiculos(VehiculoID),
-    FOREIGN KEY (EmpleadoID) REFERENCES Empleados(EmpleadoID),
-    FOREIGN KEY (ServicioID) REFERENCES Servicios(ServicioID)
+CREATE TABLE empleado (
+    id INT NOT NULL AUTO_INCREMENT,
+    nombre VARCHAR(50),
+    apellido VARCHAR(50),
+    cargo VARCHAR(50),
+    telefono VARCHAR(15),
+    CONSTRAINT PK_Empleado_Id PRIMARY KEY (id)
 );
 
-CREATE TABLE Empleado (
-    id INT PRIMARY KEY,
-    Nombre VARCHAR(50),
-    Apellido VARCHAR(50),
-    Cargo VARCHAR(50),
-    Telefono VARCHAR(15)
+CREATE TABLE reparacion (
+    id INT NOT NULL AUTO_INCREMENT,
+    fecha DATE,
+    id_vehiculo INT,
+    id_empleado INT,
+    id_servicio INT,
+    costo_total DECIMAL(10, 2),
+    descripcion TEXT,
+    CONSTRAINT PK_Reparacion_Id PRIMARY KEY (id),
+    CONSTRAINT FK_Vehiculo_Reparacion_Id FOREIGN KEY (id_vehiculo) REFERENCES vehiculo(id),
+    CONSTRAINT FK_Empleado_Reparacion_Id FOREIGN KEY (id_empleado) REFERENCES empleado(id),
+    CONSTRAINT FK_Servicio_Reparacion_Id FOREIGN KEY (id_servicio) REFERENCES servicio(id)
 );
 
-CREATE TABLE Proveedor (
-    id INT PRIMARY KEY,
-    Nombre VARCHAR(50),
-    Contacto VARCHAR(50),
-    Telefono VARCHAR(15),
-    Email VARCHAR(50)
+CREATE TABLE proveedor (
+    id INT NOT NULL AUTO_INCREMENT,
+    nombre VARCHAR(50),
+    contacto VARCHAR(50),
+    telefono VARCHAR(15),
+    email VARCHAR(50),
+    CONSTRAINT PK_Proveedor_Id PRIMARY KEY (id)
 );
 
-CREATE TABLE Pieza (
-    id INT PRIMARY KEY,
-    Nombre VARCHAR(50),
-    Descripcion TEXT,
-    Precio DECIMAL(10, 2),
-    ProveedorID INT,
-    FOREIGN KEY (ProveedorID) REFERENCES Proveedores(ProveedorID)
+CREATE TABLE pieza (
+    id INT NOT NULL AUTO_INCREMENT,
+    nombre VARCHAR(50),
+    descripcion TEXT,
+    precio DECIMAL(10, 2),
+    id_proveedor INT,
+    CONSTRAINT PK_Pieza_Id PRIMARY KEY (id),
+    CONSTRAINT FK_Proveedor_Pieza_Id FOREIGN KEY (id_proveedor) REFERENCES proveedor(id)
 );
 
-CREATE TABLE ReparacionPieza (
-    ReparacionID INT,
-    PiezaID INT,
-    Cantidad INT,
-    PRIMARY KEY (ReparacionID, PiezaID),
-    FOREIGN KEY (ReparacionID) REFERENCES Reparaciones(ReparacionID),
-    FOREIGN KEY (PiezaID) REFERENCES Piezas(PiezaID)
+CREATE TABLE reparacion_pieza (
+    id_reparacion INT,
+    id_pieza INT,
+    cantidad INT,
+    CONSTRAINT PK_ReparacionPieza_Id PRIMARY KEY (id_reparacion, id_pieza),
+    CONSTRAINT FK_Reparacion_ReparacionPieza_Id FOREIGN KEY (id_reparacion) REFERENCES reparacion(id),
+    CONSTRAINT FK_Pieza_ReparacionPieza_Id FOREIGN KEY (id_pieza) REFERENCES pieza(id)
 );
 
-CREATE TABLE Cita (
-    id INT PRIMARY KEY,
-    FechaHora DATETIME,
-    ClienteID INT,
-    VehiculoID INT,
-    ServicioID INT,
-    FOREIGN KEY (ClienteID) REFERENCES Clientes(ClienteID),
-    FOREIGN KEY (VehiculoID) REFERENCES Vehiculos(VehiculoID),
-    FOREIGN KEY (ServicioID) REFERENCES Servicios(ServicioID)
+CREATE TABLE cita (
+    id INT NOT NULL AUTO_INCREMENT,
+    fecha_hora DATETIME,
+    id_cliente INT,
+    id_vehiculo INT,
+    id_servicio INT,
+    CONSTRAINT PK_Cita_Id PRIMARY KEY (id),
+    CONSTRAINT FK_Cliente_Cita_Id FOREIGN KEY (id_cliente) REFERENCES cliente(id),
+    CONSTRAINT FK_Vehiculo_Cita_Id FOREIGN KEY (id_vehiculo) REFERENCES vehiculo(id),
+    CONSTRAINT FK_Servicio_Cita_Id FOREIGN KEY (id_servicio) REFERENCES servicio(id)
 );
 
-CREATE TABLE Inventario (
-    id INT PRIMARY KEY,
-    PiezaID INT,
-    Cantidad INT,
-    Ubicacion VARCHAR(50),
-    FOREIGN KEY (PiezaID) REFERENCES Piezas(PiezaID)
+CREATE TABLE inventario (
+    id INT NOT NULL AUTO_INCREMENT,
+    id_pieza INT,
+    cantidad INT,
+    ubicacion VARCHAR(50),
+    CONSTRAINT PK_Inventario_Id PRIMARY KEY (id),
+    CONSTRAINT FK_Pieza_Inventario_Id FOREIGN KEY (id_pieza) REFERENCES pieza(id)
 );
 
-CREATE TABLE OrdenCompra (
-    id INT PRIMARY KEY,
-    Fecha DATE,
-    ProveedorID INT,
-    EmpleadoID INT,
-    Total DECIMAL(10, 2),
-    FOREIGN KEY (ProveedorID) REFERENCES Proveedores(ProveedorID),
-    FOREIGN KEY (EmpleadoID) REFERENCES Empleados(EmpleadoID)
+CREATE TABLE orden_compra (
+    id INT NOT NULL AUTO_INCREMENT,
+    fecha DATE,
+    id_proveedor INT,
+    id_empleado INT,
+    total DECIMAL(10, 2),
+    CONSTRAINT PK_OrdenCompra_Id PRIMARY KEY (id),
+    CONSTRAINT FK_Proveedor_OrdenCompra_Id FOREIGN KEY (id_proveedor) REFERENCES proveedor(id),
+    CONSTRAINT FK_Empleado_OrdenCompra_Id FOREIGN KEY (id_empleado) REFERENCES empleado(id)
 );
 
-CREATE TABLE OrdenDetalle (
-    OrdenID INT,
-    PiezaID INT,
-    Cantidad INT,
-    Precio DECIMAL(10, 2),
-    PRIMARY KEY (OrdenID, PiezaID),
-    FOREIGN KEY (OrdenID) REFERENCES ordenes_Compra(OrdenID),
-    FOREIGN KEY (PiezaID) REFERENCES Piezas(PiezaID)
+CREATE TABLE orden_detalle (
+    id_orden INT,
+    id_pieza INT,
+    cantidad INT,
+    precio DECIMAL(10, 2),
+    CONSTRAINT PK_OrdenDetalle_Id PRIMARY KEY (id_orden, id_pieza),
+    CONSTRAINT FK_OrdenCompra_OrdenDetalle_Id FOREIGN KEY (id_orden) REFERENCES orden_compra(id),
+    CONSTRAINT FK_Pieza_OrdenDetalle_Id FOREIGN KEY (id_pieza) REFERENCES pieza(id)
 );
 
-CREATE TABLE Facturacion (
-    id INT PRIMARY KEY,
-    Fecha DATE,
-    ClienteID INT,
-    Total DECIMAL(10, 2),
-    FOREIGN KEY (ClienteID) REFERENCES Clientes(ClienteID)
+CREATE TABLE facturacion (
+    id INT NOT NULL AUTO_INCREMENT,
+    fecha DATE,
+    id_cliente INT,
+    total DECIMAL(10, 2),
+    CONSTRAINT PK_Facturacion_Id PRIMARY KEY (id),
+    CONSTRAINT FK_Cliente_Facturacion_Id FOREIGN KEY (id_cliente) REFERENCES cliente(id)
 );
 
-CREATE TABLE FacturaDetalle (
-    FacturaID INT,
-    ReparacionID INT,
-    Cantidad INT,
-    Precio DECIMAL(10, 2),
-    PRIMARY KEY (FacturaID, ReparacionID),
-    FOREIGN KEY (FacturaID) REFERENCES Facturacion(FacturaID),
-    FOREIGN KEY (ReparacionID) REFERENCES Reparaciones(ReparacionID)
+CREATE TABLE factura_detalle (
+    id_factura INT,
+    id_reparacion INT,
+    cantidad INT,
+    precio DECIMAL(10, 2),
+    CONSTRAINT PK_FacturaDetalle_Id PRIMARY KEY (id_factura, id_reparacion),
+    CONSTRAINT FK_Factura_FacturaDetalle_Id FOREIGN KEY (id_factura) REFERENCES facturacion(id),
+    CONSTRAINT FK_Reparacion_FacturaDetalle_Id FOREIGN KEY (id_reparacion) REFERENCES reparacion(id)
 );
 
 
