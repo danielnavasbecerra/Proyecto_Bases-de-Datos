@@ -7,7 +7,7 @@
 CREATE DATABASE automotive_design;
 USE automotive_design;
 
--- Creación de las tablas
+-- Creación de las tablas (30-Total)
 CREATE TABLE pais (
     id INT AUTO_INCREMENT,
     nombre VARCHAR(50) NOT NULL,
