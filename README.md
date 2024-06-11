@@ -770,7 +770,7 @@
    CALL InsertarReparacion('2024-06-10', 1, 1, 500.00, 'Reparación del motor');
    
    ```
-   
+
    > [!TIP]
    >
    > ###### `DELIMITER //`: Esto cambia el delimitador de fin de instrucción a `//` para que podamos escribir el procedimiento almacenado en varias líneas.
@@ -782,5 +782,83 @@
    > ###### `INSERT INTO reparacion ...`: Esta es la instrucción SQL que inserta una nueva fila en la tabla `reparacion` con los valores proporcionados para los parámetros de entrada.
    >
    > ###### `DELIMITER ;`: Esto restablece el delimitador de fin de instrucción a `;` para evitar conflictos con otras instrucciones SQL fuera del procedimiento almacenado.
+
    
+
+2. Crear un procedimiento almacenado para actualizar el inventario de una pieza.
+
+   ```mysql
    
+   ```
+
+   > [!IMPORTANT]
+   >
+   > 
+
+   
+
+3. Crear un procedimiento almacenado para eliminar una cita.
+
+   ```mysql
+   
+   ```
+
+   > [!WARNING]
+   >
+   > 
+
+   
+
+4. Crear un procedimiento almacenado para generar una factura.
+
+   ```mysql
+   
+   ```
+
+   
+
+5. Crear un procedimiento almacenado para obtener el historial de reparaciones de un vehículo.
+
+   ```mysql
+   
+   ```
+
+   
+
+6. Crear un procedimiento almacenado para calcular el costo total de reparaciones de un cliente en un período.
+
+   ```mysql
+   
+   ```
+
+   
+
+7. Crear un procedimiento almacenado para obtener la lista de vehículos que requieren mantenimiento basado en el kilometraje.
+
+   ```mysql
+   
+   ```
+
+   
+
+8. Crear un procedimiento almacenado para insertar una nueva orden de compra.
+
+   ```mysql
+   
+   ```
+
+   
+
+9. Crear un procedimiento almacenado para actualizar los datos de un cliente.
+
+   ```mysql
+   
+   ```
+
+   
+
+10. Crear un procedimiento almacenado para obtener los servicios más solicitados en un período.
+
+   ```mysql
+   
+   ```
