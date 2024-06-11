@@ -73,10 +73,8 @@
    
    ```
 
-   > [!TIP]
-   >
    > ###### Se esta seleccionando la fecha de la reparación, el nombre del servicio, el costo total y la descripción de la reparación; luego se están combinando las tabla de reparaciones (`reparacion`), la tabla que relaciona las reparaciones con los servicios (`reparacion_servicio`), la tabla de servicios (`servicio`) y la tabla de vehículos (`vehiculo`)  utilizando la cláusula `JOIN`; luego se están limitando los resultados solo a las reparaciones asociadas con un vehículo específico, esto se hace comparando la placa del vehículo con la placa que hemos puesto, en este caso, `'DEF456'`.
-
+   
    
 
 2. Calcular el costo total de todas las reparaciones realizadas por un empleado específico en un período de tiempo.
@@ -96,10 +94,8 @@
    
    ```
 
-   > [!TIP]
-   >
    > ###### Se esta seleccionando el nombre del empleado y la suma total de los costos de las reparaciones realizadas por el empleado; luego se están combinando las tablas de reparación (`reparacion`) y empleado (`empleado`) utilizando la cláusula `JOIN`, esto nos permite asociar cada reparación con su respectivo empleado; luego se limitan los resultados solo a las reparaciones realizadas por el empleado específico (`e.id = ID_DEL_EMPLEADO`) dentro del período de tiempo especificado (`r.fecha BETWEEN 'FECHA_INICIAL' AND 'FECHA_FINAL'`).
-
+   
    
 
 3. Listar todos los clientes y los vehículos que poseen.
@@ -126,10 +122,8 @@
    
    ```
 
-   > [!TIP]
-   >
    > ###### Se esta seleccionando el nombre y apellido del cliente (`c.nombre`, `c.apellido`), así como la placa y modelo de los vehículos que poseen (`v.placa`, `v.modelo`); luego se combinan las tablas de cliente (`cliente`) y vehículo (`vehiculo`) utilizando un `LEFT JOIN`, esto nos permite incluir todos los clientes, incluso aquellos que no tienen vehículos asociados en la tabla de vehículos (Aunque en este caso todos tienen un vehículo); luego se esta asociando cada cliente con sus vehículos correspondientes `c.id = v.id_cliente`, lo que permite mostrar los vehículos que posee cada cliente.
-
+   
    
 
 4. Obtener la cantidad de piezas en inventario para cada pieza.
@@ -157,10 +151,8 @@
    
    ```
 
-   > [!TIP]
-   >
    > ###### Se esta seleccionando el nombre de la pieza (`p.nombre`) y contando la cantidad de registros en la tabla de inventario asociados con cada tipo de pieza (`COUNT(*) AS cantidad_en_inventario`); luego se combinan las tablas de pieza (`pieza`) y pieza_inventario (`pieza_inventario`) utilizando un `LEFT JOIN`, lo que permite incluir todas las piezas, incluso aquellas que no tienen registros en la tabla de inventario; luego se están agrupando los datos por el nombre de la pieza (`GROUP BY p.nombre`), lo que permite contar la cantidad de registros en la tabla de inventario asociados con cada tipo de pieza.
-
+   
    
 
 5. Obtener las citas programadas para un día específico.
@@ -180,16 +172,11 @@
    
    ```
 
-   > [!TIP]
+   > ###### Se selecciona la fecha y hora de la cita (`c.fecha_hora`), así como el nombre y apellido del cliente (`cl.nombre`, `cl.apellido`) y la placa y modelo del vehículo (`v.placa`, `v.modelo`) asociados con cada cita; luego se combinan las tablas de cita (`cita`), cliente (`cliente`) y vehículo (`vehiculo`) utilizando `JOIN`, esto permite obtener la información necesaria sobre cada cita, el cliente asociado y el vehículo asociado; luego se filtran los resultados para incluir solo las citas cuya fecha coincida con el día específico proporcionado. Utilizamos la función `DATE()` para extraer solo la fecha de `c.fecha_hora` y luego comparamos esta fecha con la fecha específica proporcionada.
    >
-   > ###### Estamos seleccionando la fecha y hora de la cita (`c.fecha_hora`), así como el nombre y apellido del cliente (`cl.nombre`, `cl.apellido`) y la placa y modelo del vehículo (`v.placa`, `v.modelo`) asociados con cada cita.
-   >
-   > ###### Estamos combinando las tablas de cita (`cita`), cliente (`cliente`) y vehículo (`vehiculo`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada cita, el cliente asociado y el vehículo asociado.
-   >
-   > ###### Estamos filtrando los resultados para incluir solo las citas cuya fecha coincida con el día específico proporcionado. Utilizamos la función `DATE()` para extraer solo la fecha de `c.fecha_hora` y luego comparamos esta fecha con la fecha específica proporcionada.
-
    
-
+   
+   
 6. Generar una factura para un cliente específico en una fecha determinada.
 
    ```mysql
@@ -209,18 +196,11 @@
    
    ```
 
-   > [!TIP]
+   > ###### Se selecciona el nombre y apellido del cliente (`c.nombre`, `c.apellido`), la fecha de la reparación (`r.fecha`) y la suma total de los costos de reparación (`SUM(r.costo_total) AS total_factura`) para generar el total de la factura; luego se combinan las tablas de cliente (`cliente`), vehículo (`vehiculo`) y reparación (`reparacion`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre las reparaciones realizadas por el cliente específico; luego se filtran los resultados para incluir solo las reparaciones realizadas por el cliente específico en la fecha determinada. Utilizamos la función `DATE()` para extraer solo la fecha de `r.fecha` y luego comparamos esta fecha con la fecha especificada; luego se  agrupan los datos por el nombre del cliente, el apellido y la fecha de la reparación (`GROUP BY c.nombre, c.apellido, r.fecha`). Esto nos permite calcular el total de la factura para cada cliente en la fecha especificada.
    >
-   > ###### Se esta seleccionando el nombre y apellido del cliente (`c.nombre`, `c.apellido`), la fecha de la reparación (`r.fecha`) y la suma total de los costos de reparación (`SUM(r.costo_total) AS total_factura`) para generar el total de la factura.
-   >
-   > ###### Estamos combinando las tablas de cliente (`cliente`), vehículo (`vehiculo`) y reparación (`reparacion`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre las reparaciones realizadas por el cliente específico.
-   >
-   > ###### Estamos filtrando los resultados para incluir solo las reparaciones realizadas por el cliente específico en la fecha determinada. Utilizamos la función `DATE()` para extraer solo la fecha de `r.fecha` y luego comparamos esta fecha con la fecha especificada.
-   >
-   > ######  Estamos agrupando los datos por el nombre del cliente, el apellido y la fecha de la reparación (`GROUP BY c.nombre, c.apellido, r.fecha`). Esto nos permite calcular el total de la factura para cada cliente en la fecha especificada.
-
    
-
+   
+   
 7. Listar todas las órdenes de compra y sus detalles.
 
    ```mysql
@@ -256,12 +236,10 @@
    
    ```
 
-   > [!TIP]
-   >
    > ###### Estamos seleccionando el ID de la orden de compra (`oc.id`), la fecha de la orden de compra (`oc.fecha`), el nombre del proveedor (`p.nombre`), el ID de la pieza comprada (`od.id_pieza`), la cantidad de piezas compradas (`od.cantidad`) y el precio de cada pieza (`od.precio`).
    >
    > ###### Estamos combinando las tablas de orden de compra (`orden_compra`), orden de compra detalle (`orden_detalle`) y proveedor (`proveedor`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada orden de compra y sus detalles, así como el proveedor asociado con cada orden.
-
+   
    
 
 8. Obtener el costo total de piezas utilizadas en una reparación específica.
@@ -307,8 +285,6 @@
     
     ```
 
-    > [!TIP]
-    >
     > ###### Estamos seleccionando el nombre del servicio (`s.nombre`) y contando cuántas veces se solicita cada servicio (`COUNT(*) AS cantidad_solicitudes`).
     >
     > ###### Estamos combinando las tablas de reparacion_servicio (`reparacion_servicio`), servicio (`servicio`) y reparacion (`reparacion`) utilizando `JOIN`. Esto nos permite obtener información sobre los servicios solicitados en cada reparación.
@@ -318,7 +294,7 @@
     > ###### Estamos agrupando los datos por el nombre del servicio (`GROUP BY s.nombre`). Esto nos permite contar cuántas veces se solicita cada servicio.
     >
     > ###### Estamos ordenando los resultados en orden descendente según la cantidad de solicitudes (`ORDER BY cantidad_solicitudes DESC`). Esto nos proporcionará la lista de servicios más solicitados en primer lugar.
-
+    
     
 
 11. Obtener el costo total de reparaciones para cada cliente en un período específico.
@@ -343,8 +319,6 @@
     
     ```
 
-    > [!TIP]
-    >
     > ###### Estamos seleccionando el nombre y apellido del cliente (`c.nombre`, `c.apellido`) y la suma total gastada por el cliente en reparaciones (`SUM(r.costo_total) AS costo_total_reparaciones`).
     >
     > ###### Estamos combinando las tablas de cliente (`cliente`), vehículo (`vehiculo`) y reparación (`reparacion`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada cliente y sus reparaciones asociadas.
@@ -352,7 +326,7 @@
     > ###### Estamos filtrando los resultados para incluir solo las reparaciones que ocurrieron durante el período específico establecido por `FECHA_INICIAL` y `FECHA_FINAL`.
     >
     > ###### Estamos agrupando los datos por el ID del cliente (`GROUP BY c.id`). Esto nos permite calcular el costo total de reparaciones para cada cliente en el período especificado.
-
+    
     
 
 12. Listar los empleados con mayor cantidad de reparaciones realizadas en un período específico.
@@ -375,8 +349,6 @@
     
     ```
 
-    > [!TIP]
-    >
     > ###### Estamos seleccionando el nombre y apellido del empleado (`e.nombre`, `e.apellido`) y la cantidad total de reparaciones realizadas por el empleado (`COUNT(r.id) AS cantidad_reparaciones`).
     >
     > ###### Estamos combinando las tablas de empleado (`empleado`) y reparación (`reparacion`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada empleado y las reparaciones que han realizado.
@@ -408,8 +380,6 @@
     
     ```
 
-    > [!TIP]
-    >
     > ###### Estamos seleccionando el nombre de la pieza (`p.nombre`) y la suma total de la cantidad utilizada de esa pieza en reparaciones (`SUM(rp.cantidad) AS cantidad_utilizada`).
     >
     > ###### Estamos combinando las tablas de pieza (`pieza`), reparacion_piezas (`reparacion_piezas`) y reparacion (`reparacion`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada pieza y sus reparaciones asociadas.
@@ -447,8 +417,6 @@
     
     ```
 
-    > [!TIP]
-    >
     > ###### Estamos seleccionando la placa del vehículo (`v.placa`) y el promedio del costo total de las reparaciones de ese vehículo (`AVG(r.costo_total) AS promedio_costo_reparaciones`).
     >
     > ###### Estamos combinando las tablas de vehículo (`vehiculo`) y reparación (`reparacion`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada vehículo y sus reparaciones asociadas.
@@ -495,8 +463,6 @@
     
     ```
 
-    > [!TIP]
-    >
     > ###### Estamos seleccionando el nombre de la pieza (`p.nombre`), el nombre del proveedor (`pr.nombre`) y la cantidad en inventario (`i.cantidad`).
     >
     > ###### `JOIN precio prc ON p.id = prc.id_pieza`: Combinamos las tablas `pieza` y `precio` para obtener los proveedores que suministran cada pieza.
@@ -534,8 +500,6 @@
     
     ```
 
-    > [!TIP]
-    >
     > ###### Estamos seleccionando la suma total de todas las facturas emitidas (`SUM(f.total)`) en el período específico y la etiquetamos como `ganancias_totales`.
     >
     > ###### La consulta se centra en la tabla `factura` (`factura f`).
@@ -581,8 +545,6 @@
     
     ```
     
-    > [!TIP]
-    >
     > ###### Estamos seleccionando el nombre y apellido del empleado (`e.nombre`, `e.apellido`), el nombre del servicio prestado (`s.nombre`), y la fecha de la reparación (`r.fecha`).
     >
     > ###### `JOIN reparacion r ON e.id = r.id_empleado`: Combinamos las tablas `empleado` y `reparacion` para obtener las reparaciones realizadas por cada empleado.
@@ -621,8 +583,6 @@
    
    ```
 
-   > [!TIP]
-   >
    > ###### Estamos seleccionando el nombre y apellido del cliente (`c.nombre`, `c.apellido`) y la suma total gastada por el cliente en reparaciones (`SUM(r.costo_total) AS total_gastado`).
    >
    > ###### Estamos combinando las tablas de cliente (`cliente`), vehículo (`vehiculo`) y reparación (`reparacion`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada cliente y sus reparaciones asociadas.
@@ -632,7 +592,7 @@
    > ###### Estamos agrupando los datos por el ID del cliente (`GROUP BY c.id`). Esto nos permite calcular el total gastado por cada cliente en reparaciones.
    >
    > ######  Estamos ordenando los resultados en orden descendente según el total gastado (`ORDER BY total_gastado DESC`) y luego seleccionando solo el primer resultado utilizando `LIMIT 1`, lo que nos da el cliente que ha gastado más en reparaciones durante el último año.
-
+   
    
 
 2. Obtener la pieza más utilizada en reparaciones durante el último mes.
@@ -655,8 +615,6 @@
    
    ```
 
-   > [!TIP]
-   >
    > ###### Estamos seleccionando el nombre de la pieza (`p.nombre`) y la suma total de la cantidad utilizada de esa pieza en reparaciones (`SUM(rp.cantidad) AS total_utilizado`).
    >
    > ###### Estamos combinando las tablas de pieza (`pieza`), reparacion_piezas (`reparacion_piezas`) y reparacion (`reparacion`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada pieza y sus reparaciones asociadas.
@@ -666,7 +624,7 @@
    > ###### Estamos agrupando los datos por el ID de la pieza (`GROUP BY p.id`). Esto nos permite calcular la cantidad total de cada pieza utilizada en reparaciones durante el último mes.
    >
    > ###### Estamos ordenando los resultados en orden descendente según la cantidad total utilizada (`ORDER BY total_utilizado DESC`) y luego seleccionando solo el primer resultado utilizando `LIMIT 1`, lo que nos da la pieza más utilizada en reparaciones durante el último mes.
-
+   
    
 
 3. Obtener los proveedores que suministran las piezas más caras.
@@ -688,8 +646,6 @@
    
    ```
 
-   > [!TIP]
-   >
    > ###### Estamos seleccionando el nombre del proveedor (`pr.nombre`).
    >
    > ###### Estamos combinando las tablas de proveedor (`proveedor`) y precio (`precio`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada proveedor y los precios de las piezas que suministran.
@@ -697,7 +653,7 @@
    > ###### Estamos filtrando los resultados para incluir solo los proveedores cuyas piezas tengan el precio máximo utilizando una subconsulta. La subconsulta `SELECT MAX(precio_proveedor) FROM precio` calcula el precio máximo de todas las piezas suministradas por cualquier proveedor.
    >
    > ###### Estamos comparando el precio de cada proveedor con el precio máximo calculado por la subconsulta utilizando la condición `p.precio_proveedor = (...)`.
-
+   
    
 
 4. Listar las reparaciones que no utilizaron piezas específicas durante el último año.
@@ -725,12 +681,10 @@
    
    ```
 
-   > [!TIP]
-   >
    > ###### Utilizamos una subconsulta para encontrar las reparaciones que no tienen ninguna entrada en la tabla `reparacion_piezas`. Utilizamos `DISTINCT` para obtener únicamente los identificadores únicos de reparaciones en la tabla `reparacion_piezas`.
    >
    > ###### Se filtran las reparaciones para incluir solo aquellas que ocurrieron durante el último año utilizando la función `DATE_SUB(NOW(), INTERVAL 1 YEAR)` para restar un año a la fecha actual y `NOW()` para obtener la fecha actual.
-
+   
    
 
 5. Obtener las piezas que están en inventario por debajo del 10% del stock inicial.
@@ -771,8 +725,6 @@
    
    ```
 
-   > [!TIP]
-   >
    > ###### `DELIMITER //`: Esto cambia el delimitador de fin de instrucción a `//` para que podamos escribir el procedimiento almacenado en varias líneas.
    >
    > ###### `CREATE PROCEDURE InsertarReparacion(...)`: Creamos un nuevo procedimiento almacenado llamado `InsertarReparacion` que acepta cinco parámetros de entrada: `fecha_reparacion`, `id_empleado`, `id_vehiculo`, `costo_total` y `descripcion`.
@@ -788,12 +740,39 @@
 2. Crear un procedimiento almacenado para actualizar el inventario de una pieza.
 
    ```mysql
+   DELIMITER //
+   
+   CREATE PROCEDURE actualizar_inventario_pieza(
+       IN p_id_pieza INT,
+       IN p_nueva_cantidad INT
+   )
+   BEGIN
+       UPDATE inventario i
+       JOIN pieza_inventario pi ON i.id = pi.id_inventario
+       SET i.cantidad = p_nueva_cantidad
+       WHERE pi.id_pieza = p_id_pieza;
+   END //
+   
+   DELIMITER ;
    
    ```
 
-   > [!IMPORTANT]
+   > **DELIMITER //:** Cambiamos el delimitador de las declaraciones SQL para que podamos definir todo el procedimiento almacenado sin que MySQL lo interprete como múltiples declaraciones separadas.
    >
-   > 
+   > **CREATE PROCEDURE:** Comenzamos la definición del procedimiento almacenado llamado `actualizar_inventario_pieza`.
+   >
+   > **Parámetros de entrada:**
+   >
+   > - `IN p_id_pieza INT`: El identificador de la pieza que se va a actualizar.
+   > - `IN p_nueva_cantidad INT`: La nueva cantidad que se establecerá en el inventario para la pieza especificada.
+   >
+   > **Cuerpo del procedimiento:**
+   >
+   > - `UPDATE inventario i JOIN pieza_inventario pi ON i.id = pi.id_inventario SET i.cantidad = p_nueva_cantidad WHERE pi.id_pieza = p_id_pieza;`: Actualiza la cantidad de inventario de la pieza especificada. Se utiliza una combinación (`JOIN`) entre las tablas `inventario` y `pieza_inventario` para encontrar el inventario correspondiente a la pieza y luego se establece la nueva cantidad.
+   >
+   > **END:** Finaliza la definición del procedimiento almacenado.
+   >
+   > **DELIMITER ;:** Restablecemos el delimitador a `;`.
 
    
 
@@ -803,7 +782,7 @@
    
    ```
 
-   > [!WARNING]
+   > 
    >
    > 
 
