@@ -358,89 +358,243 @@
 12. Listar los empleados con mayor cantidad de reparaciones realizadas en un período específico.
 
     ```mysql
+    SELECT e.nombre AS nombre_empleado, e.apellido AS apellido_empleado, COUNT(r.id) AS cantidad_reparaciones
+    FROM empleado AS e
+    JOIN reparacion AS r ON e.id = r.id_empleado
+    WHERE r.fecha BETWEEN '2024-06-02' AND '2024-06-04'
+    GROUP BY e.id, e.nombre, e.apellido
+    ORDER BY cantidad_reparaciones DESC;
     
-    ```
-
-    > [!TIP]
-
-13. Obtener las piezas más utilizadas en reparaciones durante un período específico.
-
-    ```mysql
-    
-    ```
-
-    > [!TIP]
-
-14. Calcular el promedio de costo de reparaciones por vehículo.
-
-    ```mysql
+    +-----------------+-------------------+-----------------------+
+    | nombre_empleado | apellido_empleado | cantidad_reparaciones |
+    +-----------------+-------------------+-----------------------+
+    | Ana             | López             |                     1 |
+    | Pedro           | Fernández         |                     1 |
+    | María           | Gómez             |                     1 |
+    +-----------------+-------------------+-----------------------+
     
     ```
 
     > [!TIP]
     >
-    > 
+    > ###### Estamos seleccionando el nombre y apellido del empleado (`e.nombre`, `e.apellido`) y la cantidad total de reparaciones realizadas por el empleado (`COUNT(r.id) AS cantidad_reparaciones`).
+    >
+    > ###### Estamos combinando las tablas de empleado (`empleado`) y reparación (`reparacion`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada empleado y las reparaciones que han realizado.
+    >
+    > ###### Estamos filtrando los resultados para incluir solo las reparaciones que ocurrieron durante el período específico establecido por `FECHA_INICIAL` y `FECHA_FINAL`.
+    >
+    > ###### Estamos agrupando los datos por el ID del empleado (`GROUP BY e.id, e.nombre, e.apellido`). Esto nos permite contar el número de reparaciones realizadas por cada empleado.
+    >
+    > ###### Estamos ordenando los resultados en orden descendente según la cantidad de reparaciones realizadas (`ORDER BY cantidad_reparaciones DESC`), para listar primero a los empleados con mayor cantidad de reparaciones.
+
+    
+
+13. Obtener las piezas más utilizadas en reparaciones durante un período específico.
+
+    ```mysql
+    SELECT p.nombre AS nombre_pieza, SUM(rp.cantidad) AS cantidad_utilizada
+    FROM pieza p
+    JOIN reparacion_piezas rp ON p.id = rp.id_pieza
+    JOIN reparacion r ON rp.id_reparacion = r.id
+    WHERE r.fecha BETWEEN '2024-06-02' AND '2024-06-04'
+    GROUP BY p.id, p.nombre
+    ORDER BY cantidad_utilizada DESC;
+    
+    +--------------+--------------------+
+    | nombre_pieza | cantidad_utilizada |
+    +--------------+--------------------+
+    | Neumático    |                  4 |
+    +--------------+--------------------+
+    
+    ```
+
+    > [!TIP]
+    >
+    > ###### Estamos seleccionando el nombre de la pieza (`p.nombre`) y la suma total de la cantidad utilizada de esa pieza en reparaciones (`SUM(rp.cantidad) AS cantidad_utilizada`).
+    >
+    > ###### Estamos combinando las tablas de pieza (`pieza`), reparacion_piezas (`reparacion_piezas`) y reparacion (`reparacion`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada pieza y sus reparaciones asociadas.
+    >
+    > ###### Estamos filtrando los resultados para incluir solo las reparaciones que ocurrieron durante el período específico establecido por `FECHA_INICIAL` y `FECHA_FINAL`.
+    >
+    > ###### Estamos agrupando los datos por el ID de la pieza (`GROUP BY p.id, p.nombre`). Esto nos permite calcular la cantidad total de cada pieza utilizada en reparaciones durante el período especificado.
+    >
+    > ###### Estamos ordenando los resultados en orden descendente según la cantidad total utilizada (`ORDER BY cantidad_utilizada DESC`), para listar primero las piezas más utilizadas.
+
+    
+
+14. Calcular el promedio de costo de reparaciones por vehículo.
+
+    ```mysql
+    SELECT v.placa AS placa_vehiculo, AVG(r.costo_total) AS promedio_costo_reparaciones
+    FROM vehiculo v
+    JOIN reparacion r ON v.id = r.id_vehiculo
+    GROUP BY v.id, v.placa;
+    
+    +----------------+-----------------------------+
+    | placa_vehiculo | promedio_costo_reparaciones |
+    +----------------+-----------------------------+
+    | ABC123         |                  500.000000 |
+    | BCD890         |                  300.000000 |
+    | DEF456         |                  350.000000 |
+    | GHI789         |                  700.000000 |
+    | JKL012         |                  200.000000 |
+    | MNO345         |                 1000.000000 |
+    | PQR678         |                  800.000000 |
+    | STU901         |                  600.000000 |
+    | VWX234         |                  900.000000 |
+    | YZA567         |                  400.000000 |
+    +----------------+-----------------------------+
+    
+    ```
+
+    > [!TIP]
+    >
+    > ###### Estamos seleccionando la placa del vehículo (`v.placa`) y el promedio del costo total de las reparaciones de ese vehículo (`AVG(r.costo_total) AS promedio_costo_reparaciones`).
+    >
+    > ###### Estamos combinando las tablas de vehículo (`vehiculo`) y reparación (`reparacion`) utilizando `JOIN`. Esto nos permite obtener la información necesaria sobre cada vehículo y sus reparaciones asociadas.
+    >
+    > ###### Estamos agrupando los datos por el ID del vehículo y su placa (`GROUP BY v.id, v.placa`). Esto nos permite calcular el promedio del costo de reparaciones para cada vehículo.
 
     
 
 15. Obtener el inventario de piezas por proveedor.
 
     ```mysql
+    SELECT p.nombre AS nombre_pieza, pr.nombre AS nombre_proveedor, i.cantidad AS cantidad_inventario
+    FROM pieza p
+    JOIN precio prc ON p.id = prc.id_pieza
+    JOIN proveedor pr ON prc.id_proveedor = pr.id
+    JOIN pieza_inventario pi ON p.id = pi.id_pieza
+    JOIN inventario i ON pi.id_inventario = i.id;
+    
+    +-------------------------+-------------------------+---------------------+
+    | nombre_pieza            | nombre_proveedor        | cantidad_inventario |
+    +-------------------------+-------------------------+---------------------+
+    | Filtro de aceite        | Autopiezas García       |                 100 |
+    | Filtro de aceite        | Talleres Gutiérrez      |                 100 |
+    | Pastillas de freno      | Talleres López          |                  50 |
+    | Pastillas de freno      | Talleres Gutiérrez      |                  50 |
+    | Discos de freno         | Talleres López          |                  20 |
+    | Discos de freno         | Talleres Gutiérrez      |                  20 |
+    | Neumático               | Distribuidora Martínez  |                  80 |
+    | Neumático               | Talleres Gutiérrez      |                  80 |
+    | Batería                 | Repuestos Sánchez       |                  10 |
+    | Batería                 | Talleres Gutiérrez      |                  10 |
+    | Bujía                   | Autopartes Rodríguez    |                  30 |
+    | Bujía                   | Talleres Gutiérrez      |                  30 |
+    | Correa de distribución  | Mecánica Hernández      |                  15 |
+    | Correa de distribución  | Talleres Gutiérrez      |                  15 |
+    | Líquido refrigerante    | Frenos Gómez            |                 200 |
+    | Líquido refrigerante    | Talleres Gutiérrez      |                 200 |
+    | Filtro de aire          | Neumáticos Torres       |                  40 |
+    | Filtro de aire          | Talleres Gutiérrez      |                  40 |
+    | Bombilla                | Autopiezas García       |                  25 |
+    | Bombilla                | Autorepuestos Díaz      |                  25 |
+    | Bombilla                | Talleres Gutiérrez      |                  25 |
+    +-------------------------+-------------------------+---------------------+
     
     ```
 
     > [!TIP]
     >
-    > 
+    > ###### Estamos seleccionando el nombre de la pieza (`p.nombre`), el nombre del proveedor (`pr.nombre`) y la cantidad en inventario (`i.cantidad`).
+    >
+    > ###### `JOIN precio prc ON p.id = prc.id_pieza`: Combinamos las tablas `pieza` y `precio` para obtener los proveedores que suministran cada pieza.
+    >
+    > ###### `JOIN proveedor pr ON prc.id_proveedor = pr.id`: Combinamos la tabla `precio` con `proveedor` para obtener los nombres de los proveedores.
+    >
+    > ###### `JOIN pieza_inventario pi ON p.id = pi.id_pieza`: Combinamos las tablas `pieza` y `pieza_inventario` para obtener los inventarios asociados a cada pieza.
+    >
+    > ###### `JOIN inventario i ON pi.id_inventario = i.id`: Combinamos `pieza_inventario` con `inventario` para obtener las cantidades en inventario.
 
     
 
 16. Listar los clientes que no han realizado reparaciones en el último año.
 
     ```mysql
-    
+    *
     ```
 
     > [!TIP]
-    >
-    > 
 
     
 
 17. Obtener las ganancias totales del taller en un período específico.
 
     ```mysql
+    SELECT SUM(f.total) AS ganancias_totales
+    FROM factura f
+    WHERE f.fecha BETWEEN '2024-06-02' AND '2024-06-15';
+    
+    +-------------------+
+    | ganancias_totales |
+    +-------------------+
+    |            500.00 |
+    +-------------------+
     
     ```
 
     > [!TIP]
     >
-    > 
+    > ###### Estamos seleccionando la suma total de todas las facturas emitidas (`SUM(f.total)`) en el período específico y la etiquetamos como `ganancias_totales`.
+    >
+    > ###### La consulta se centra en la tabla `factura` (`factura f`).
+    >
+    > ###### Utilizamos una cláusula `WHERE` para filtrar las facturas emitidas entre las fechas específicas proporcionadas (`f.fecha BETWEEN 'FECHA_INICIAL' AND'FECHA_FINAL'`).
 
     
 
 18. Listar los empleados y el total de horas trabajadas en reparaciones en un período específico (asumiendo que se registra la duración de cada reparación).
 
     ```mysql
-    
+    *
     ```
 
     > [!TIP]
-    >
-    > 
 
     
 
 19. Obtener el listado de servicios prestados por cada empleado en un período específico.
 
     ```mysql
+    SELECT e.nombre AS nombre_empleado, e.apellido AS apellido_empleado, s.nombre AS nombre_servicio, r.fecha
+    FROM empleado e
+    JOIN reparacion r ON e.id = r.id_empleado
+    JOIN reparacion_servicio rs ON r.id = rs.id_reparacion
+    JOIN servicio s ON rs.id_servicio = s.id
+    WHERE r.fecha BETWEEN '2024-06-02' AND '2024-06-10'
+    ORDER BY e.nombre, e.apellido, r.fecha;
+    
+    +-----------------+-------------------+-------------------------------------+------------+
+    | nombre_empleado | apellido_empleado | nombre_servicio                     | fecha      |
+    +-----------------+-------------------+-------------------------------------+------------+
+    | Ana             | López             | Cambio de neumáticos                | 2024-06-02 |
+    | Ana             | López             | Cambio de frenos                    | 2024-06-08 |
+    | Elena           | Rodríguez         | Reparación de chapa y pintura       | 2024-06-06 |
+    | Jorge           | Díaz              | Mantenimiento de aire acondicionado | 2024-06-05 |
+    | Luis            | Martínez          | Alineación y balanceo               | 2024-06-07 |
+    | María           | Gómez             | Lavado y encerado                   | 2024-06-04 |
+    | María           | Gómez             | Inspección de seguridad             | 2024-06-10 |
+    | Pedro           | Fernández         | Reparación de chapa y pintura       | 2024-06-03 |
+    | Pedro           | Fernández         | Cambio de aceite                    | 2024-06-09 |
+    +-----------------+-------------------+-------------------------------------+------------+
     
     ```
-
+    
     > [!TIP]
     >
-    > 
-
+    > ###### Estamos seleccionando el nombre y apellido del empleado (`e.nombre`, `e.apellido`), el nombre del servicio prestado (`s.nombre`), y la fecha de la reparación (`r.fecha`).
+    >
+    > ###### `JOIN reparacion r ON e.id = r.id_empleado`: Combinamos las tablas `empleado` y `reparacion` para obtener las reparaciones realizadas por cada empleado.
+    >
+    > ###### `JOIN reparacion_servicio rs ON r.id = rs.id_reparacion`: Combinamos `reparacion` con `reparacion_servicio` para obtener los servicios específicos prestados en cada reparación.
+    >
+    > ###### `JOIN servicio s ON rs.id_servicio = s.id`: Combinamos `reparacion_servicio` con `servicio` para obtener los nombres de los servicios prestados.
+    >
+    > ###### Filtramos las reparaciones para incluir solo aquellas que ocurrieron durante el período específico establecido por `FECHA_INICIAL` y `FECHA_FINAL`.
+    >
+    > ###### Ordenamos los resultados por el nombre del empleado, apellido y la fecha de la reparación para que la información sea fácil de leer y organizada cronológicamente.
+    
     
 
 
@@ -596,7 +750,7 @@
 1. Crear un procedimiento almacenado para insertar una nueva reparación.
 
    ```mysql
-   DELIMITER //
+   DELIMITER $$
    
    CREATE PROCEDURE InsertarReparacion(
        IN fecha_reparacion DATE,
@@ -608,14 +762,15 @@
    BEGIN
        INSERT INTO reparacion(fecha, id_empleado, id_vehiculo, costo_total, descripcion)
        VALUES(fecha_reparacion, id_empleado, id_vehiculo, costo_total, descripcion);
-   END//
+   END$$
    
    DELIMITER ;
+   
    
    CALL InsertarReparacion('2024-06-10', 1, 1, 500.00, 'Reparación del motor');
    
    ```
-
+   
    > [!TIP]
    >
    > ###### `DELIMITER //`: Esto cambia el delimitador de fin de instrucción a `//` para que podamos escribir el procedimiento almacenado en varias líneas.
@@ -627,5 +782,5 @@
    > ###### `INSERT INTO reparacion ...`: Esta es la instrucción SQL que inserta una nueva fila en la tabla `reparacion` con los valores proporcionados para los parámetros de entrada.
    >
    > ###### `DELIMITER ;`: Esto restablece el delimitador de fin de instrucción a `;` para evitar conflictos con otras instrucciones SQL fuera del procedimiento almacenado.
-
+   
    
